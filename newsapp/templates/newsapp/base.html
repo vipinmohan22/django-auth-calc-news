@@ -1,0 +1,76 @@
+{% load static %}<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Django News{% endblock %}</title>
+    <meta property="og:locale" content="en_US"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content="https://beginnersbook.com/2013/09/add-facebook-like-button-website/"/>
+    <meta property="og:site_name" content="Easy Steps 2 Build Website"/>
+    <meta property="article:author" content=""/>
+    <meta property="article:publisher" content="https://www.facebook.com/es2bw"/>
+    <meta property="og:title" content="How to add facebook like button to website"/>
+    <meta property="og:description"
+          content="Adding a Facebook like button to the website is an easy task, however you may need to have an eye on few other performance related issue which may occur while a(...)"/>
+    <meta property="og:image" content="https://beginnersbook.com/wp-content/uploads/2013/09/fblike1-150x150.jpg"/>
+
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'newsapp/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'newsapp/css/app.css' %}">
+
+    {% block stylesheet %}{% endblock %}  <!-- HERE -->
+</head>
+<body>
+{% block body %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'newsapp:index' %}">Django News</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu"
+                aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <form action="{% url 'newsapp:search' %}" method="GET">
+            <input name="query" type="text">
+            <input type="submit" value="Submit">
+        </form>
+        <div class="collapse navbar-collapse" id="mainMenu">
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav ml-auto">
+                <li><a class="nav-link" href="{% url 'newsapp:news_new' %}">Add News</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                        <a class="dropdown-item" href="#">My account</a>
+                        <a class="dropdown-item" href="#">Change password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}?next={{ request.get_full_path }}">Log out</a>
+                    </div>
+                </li>
+            </ul>
+            {% else %}
+            <form class="form-inline ml-auto">
+                <a href="{% url 'login' %}?next={{ request.get_full_path }}" class="btn btn-outline-secondary">Log
+                    in</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary ml-2">Sign up</a>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <ol class="breadcrumb my-4">
+        {% block breadcrumb %}
+        {% endblock %}
+    </ol>
+    {% block content %}
+    {% endblock %}
+</div>
+{% endblock body %}  <!-- AND HERE -->
+<script src="{% static 'newsapp/js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'newsapp/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

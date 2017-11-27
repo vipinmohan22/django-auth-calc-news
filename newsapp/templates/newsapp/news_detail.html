@@ -1,0 +1,75 @@
+{% extends "newsapp/base.html" %}
+{% block content %}
+<head>
+    <title>Your Website Title</title>
+    <!-- You can use open graph tags to customize link previews.
+    Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
+
+</head>
+<div class="container">
+
+    <h1><a href="">{{ news.Title }}</a></h1>
+    <div class="row">
+        <div class=" col-xs-12 col-sm-6">
+            <p class="float-left">published: {{ news.updated_at }}</p>
+        </div>
+        <div class="float-right col-xs-12 col-sm-6">
+            <p class="float-right">Author: {{ news.created_by}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <article class="text-justify">{{ news.description|linebreaksbr }}</article>
+    </div>
+</div>
+<div>
+    <div class="fb-like" data-href="{{ request.build_absolute_uri }}" data-width="100"
+         data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+    <g:plusone href="{{ request.build_absolute_uri }}"></g:plusone>
+</div>
+
+<div class="social_share">
+    <a href="http://www.facebook.com/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-default">FB</a>
+    <a href="http://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ news.Title }}">TW</a>
+    <a href="https://plus.google.com/share?url={{ request.build_absolute_uri }}">G+</a>
+</div>
+<h2>Comments</h2>
+
+{% if user.is_authenticated %}
+<a class="btn btn-default" href="{% url 'newsapp:add_comment' pk=news.pk %}">Add comment</a>
+
+{% else %}
+<a href="{% url 'login' %}?next={{ request.get_full_path }}" class="btn btn-outline-secondary">Log in</a> or
+<a href="{% url 'signup' %}" class="btn btn-primary ml-2">Sign up</a> to comment
+
+{% endif %}
+
+{% for comment in news.comments.all %}
+<div class="comment">
+
+    <h4>{{ comment.text|linebreaks }}</h4>
+    <h6>{{ comment.author }}</h6>
+    <h6>{{ comment.created_date }}</h6>
+    {% if user.id == comment.author.id %}
+    <div class="date">
+        <a class="btn btn-warning" href="{% url 'newsapp:comment_remove' pk=comment.pk %}"><span
+                class="glyphicon glyphicon-remove">Delete Comment</span></a>
+    </div>
+    {% endif %}
+</div>
+
+
+{% empty %}
+<p>No comments here yet :(</p>
+{% endfor %}
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<div id="fb-root"></div>
+<script>(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.11&appId=1474219576019052';
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+{% endblock %}

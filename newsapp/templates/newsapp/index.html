@@ -1,0 +1,37 @@
+{% extends 'newsapp/base.html' %}
+
+{% block content %}
+{% for news in news %}
+<div class="postlist">
+    <h1><a href="{% url 'newsapp:news_detail' pk=news.pk %}">{{ news.Title }}</a></h1>
+    <p>published: {{ news.updated_at }}&emsp;&emsp;Author: {{ news.created_by}}</p>
+    <h4>{{ news.description|truncatewords:10 }}</h4>
+</div>
+
+{% endfor %}
+
+{% if news.has_other_pages %}
+  <ul class="pagination">
+    {% if news.has_previous %}
+      <li><a href="?page={{ news.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in news.paginator.page_range %}
+      {% if news.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if news.has_next %}
+      <li><a href="?page={{ news.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+
+
+
+{% endblock %}

@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Django Calculator{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    {% block stylesheet %}{% endblock %}  <!-- HERE -->
+</head>
+<body>
+
+<div class="topheader">
+    <h1>Django Calculator</h1>
+</div>
+<div class="row mtop50">
+    <div class="col-lg-5 col-md-5 col-sm-5 pad60">
+        <p>Perform log calculation in form of " base log X "</p>
+        <p>Example: 2log64</p>
+        <p>This is a simple calculator and follows order of left to right evaluation. This does not follow BODMAS</p>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5 ">
+        <div class="">
+            <input type="text" id="result" name="result"/>
+        </div>
+        <div>
+            <input type="submit" class="calcbtn" value="c" id="c" name="c"/>
+            <input type="submit" class="calcbtn" value="dl" id="dl" name="del"/>
+            <input type="submit" class="calcbtn" value="/" id="div" name="/"/>
+            <input type="submit" class="calcbtn" value="*" id="mul" name="*"/>
+        </div>
+        <div>
+            <input type="submit" class="calcbtn" value="7" id="7" name="7"/>
+            <input type="submit" class="calcbtn" value="8" id="8" name="8"/>
+            <input type="submit" class="calcbtn" value="9" id="9" name="9"/>
+            <input type="submit" class="calcbtn" value="-" id="sub" name="-"/>
+        </div>
+        <div>
+            <input type="submit" class="calcbtn" value="4" id="4" name="4"/>
+            <input type="submit" class="calcbtn" value="5" id="5" name="5"/>
+            <input type="submit" class="calcbtn" value="6" id="6" name="6"/>
+            <input type="submit" class="calcbtn" value="+" id="sum" name="+"/>
+        </div>
+        <div>
+            <input type="submit" class="calcbtn" value="1" id="1" name="1"/>
+            <input type="submit" class="calcbtn" value="2" id="2" name="2"/>
+            <input type="submit" class="calcbtn" value="3" id="3" name="3"/>
+            <input type="submit" class="calcbtn" value="log" id="log" name="log"/>
+
+        </div>
+        <div>
+            <input type="submit" class="calcbtn" value="0" id="0" name="0"/>
+            <input type="submit" class="calcbtn" value="=" id="equal" name="="/>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/calc.js' %}"></script>
+
+</body>
+</html>
