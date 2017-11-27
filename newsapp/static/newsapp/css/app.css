@@ -5,3 +5,12 @@
 .errorlist {
     color: red;
 }
+.username
+{
+    text-transform: capitalize;
+    font-family: 'Courgette', cursive;
+}
+.commentfont
+{
+    font-family: 'Patrick Hand', cursive;
+}
