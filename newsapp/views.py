@@ -1,16 +1,16 @@
 import datetime
-from django.views.generic import View
-from django.views.generic import TemplateView
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
-from django.views.generic import ListView, CreateView, UpdateView
-from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.utils import timezone
+from django.views.generic import ListView, CreateView, DeleteView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
+
 from .forms import NewsForm, CommentForm, SearchForm
 from .models import Newstopic, Comment
-from django.views.generic.edit import FormView
 
 
 # Create your views here.
@@ -66,24 +66,21 @@ class NewsDetailView(DetailView):
 
 
 class SearchView(FormView):
+    # pdb.set_trace()
+    form_class = SearchForm
+    success_url = reverse_lazy('search_results')
     template_name = 'newsapp/search_results.html'
 
-    def post(self, request, *args, **kwargs):
-        q = request.GET.get('query')
+    def get(self, request, *args, **kwargs):
+        q = request.GET.get('search_query')
+        # pdb.set_trace()
         news1 = Newstopic.objects.filter(title__icontains=q)
         news2 = Newstopic.objects.filter(description__icontains=q)
         news = news1.union(news2)
-        return self.render_to_response(self.get_context_data(form=form))
+        return render(request, 'newsapp/search_results.html', {'news': news})
+        # return super(NewNewsView, self).form_valid(form)
+        # return self.render_to_response(self.get_context_data(news=news))
 
-    def get_context_data(self, **kwargs):
-        context = super(SearchView, self).get_context_data(**kwargs)
-        context.update({
-            'news': self.results
-        })
-        return context
-
-
-        #return redirect('/')
 
 # def search(request):
 #     q = request.GET.get('query')
@@ -98,12 +95,19 @@ class SearchView(FormView):
 
 class NewNewsView(FormView):
     form_class = NewsForm
-    success_url = "/"
     template_name = 'newsapp/news_edit.html'
 
     def form_valid(self, form):
-        context = self.get_context_data()
+        news = form.save(commit=False)
+        news.created_by = self.request.user
+        news.updated_by = self.request.user
+        news.updated_at = datetime.datetime.now()
+        news.save()
+        self.object = news
         return super(NewNewsView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('newsapp:news_detail', kwargs={'pk': self.object.pk})
 
 
 # def news_new(request):
@@ -123,24 +127,50 @@ class NewNewsView(FormView):
 #     return render(request, 'newsapp/news_edit.html', {'form': form})
 
 
-def add_comment(request, pk):
-    news = get_object_or_404(Newstopic, pk=pk)
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.news = news
-            comment.author = request.user
-            comment.save()
-            return redirect('newsapp:news_detail', pk=news.pk)
-    else:
-        form = CommentForm()
-    return render(request, 'newsapp/add_comment.html', {'form': form})
+
+class AddCommentView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'newsapp/add_comment.html'
+
+    def form_valid(self, form):
+        print(self.kwargs['pk'])
+        comment = form.save(commit=False)
+        comment.author = self.request.user
+        comment.news = Newstopic.objects.get(pk=self.kwargs['pk'])
+        comment.save()
+        return super(AddCommentView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('newsapp:news_detail', kwargs={'pk': self.kwargs['pk']})
 
 
-# @login_required
-def comment_remove(request, pk):
-    comment = get_object_or_404(Comment, pk=pk)
-    news = comment.news
-    comment.delete()
-    return redirect('newsapp:news_detail', pk=news.pk)
+# def add_comment(request, pk):
+#     news = get_object_or_404(Newstopic, pk=pk)
+#     if request.method == "POST":
+#         form = CommentForm(request.POST)
+#         if form.is_valid():
+#             comment = form.save(commit=False)
+#             comment.news = news
+#             comment.author = request.user
+#             comment.save()
+#             return redirect('newsapp:news_detail', pk=news.pk)
+#     else:
+#         form = CommentForm()
+#     return render(request, 'newsapp/add_comment.html', {'form': form})
+
+class CommentRemoveView(DeleteView):
+    model = Comment
+
+    def form_valid(self, form):
+        self.object = Comment.object.get(pk=self.kwargs['pk'])
+        return super(NewNewsView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('newsapp:news_detail', kwargs={'pk': self.object.news.pk})
+
+# def comment_remove(request, pk):
+#     comment = get_object_or_404(Comment, pk=pk)
+#     news = comment.news
+#     comment.delete()
+#     return redirect('newsapp:news_detail', pk=news.pk)

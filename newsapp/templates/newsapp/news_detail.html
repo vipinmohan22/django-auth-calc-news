@@ -47,21 +47,25 @@
 
 {% endif %}
 <br>
-{% for comment in news.comments.all %}
+{% for comment in news.newscomment.all %}
 <br>
 <div class="row">
-<div class="col-sm-3">
-    <h6 class="username">{{ comment.author }}</h6>
-    <h6>{{ comment.created_date }}</h6>
-</div>
+    <div class="col-sm-3">
+        <h6 class="username">{{ comment.author }}</h6>
+        <h6>{{ comment.created_date }}</h6>
+    </div>
     <div class="col-sm-9">
-    <p class="commentfont">{{ comment.text}}</p>
+        <p class="commentfont">{{ comment.text}}</p>
     </div>
 
     {% if user.id == comment.author.id %}
     <div class="date">
-        <a class="btn btn-warning" href="{% url 'newsapp:comment_remove' pk=comment.pk %}"><span
-                class="glyphicon glyphicon-remove">Delete Comment</span></a>
+        <!--<a class="btn btn-warning" href="{% url 'newsapp:comment_remove' pk=comment.pk %}"><span-->
+                <!--class="glyphicon glyphicon-remove">Delete Comment</span></a>-->
+        <form method="POST" action="{% url 'newsapp:comment_remove' pk=comment.pk %}">
+        {% csrf_token %}
+            <input type="submit" value="DELETE" class="glyphicon glyphicon-remove">
+        </form>
     </div>
     {% endif %}
 </div>

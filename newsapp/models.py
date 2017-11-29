@@ -36,7 +36,7 @@ class Searchtopic(models.Model):
 
 
 class Comment(models.Model):
-    news = models.ForeignKey('newsapp.Newstopic', related_name='comments')
+    news = models.ForeignKey('newsapp.Newstopic', related_name='newscomment')
     author = models.ForeignKey(User, related_name='newstopiccomment', null=True)
     text = models.TextField(null=True)
     created_date = models.DateTimeField(default=timezone.now)

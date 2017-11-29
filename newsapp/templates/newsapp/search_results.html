@@ -1,7 +1,7 @@
 {% extends 'newsapp/base.html' %}
 <h1>Search Results</h1>
 {% block content %}
-
+<h1>Search Results</h1>
   <ul>
   {% for news in news %}
 <div class="postlist">
@@ -9,7 +9,8 @@
     <p>published: {{ news.updated_at }}&emsp;&emsp;Author: {{ news.created_by}}</p>
     <h4>{{ news.description|truncatewords:10 }}</h4>
 </div>
-
+{% empty %}
+      <h2>Its empty over here. Please check others</h2>
 {% endfor %}
   </ul>
 {% endblock %}
