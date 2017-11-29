@@ -1,14 +1,14 @@
 {% extends "newsapp/base.html" %}
 {% block content %}
 <head>
-    <title>Your Website Title</title>
+    <title>Your Website title</title>
     <!-- You can use open graph tags to customize link previews.
     Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
 
 </head>
 <div class="container">
 
-    <h1><a href="">{{ news.Title }}</a></h1>
+    <h1><a href="">{{ news.title }}</a></h1>
     <div class="row">
         <div class=" col-xs-12 col-sm-6">
             <p class="float-left">published: {{ news.updated_at }}</p>
@@ -32,7 +32,7 @@
 <h4>Share on Social Media</h4>
 <div class="social_share">
     <a href="http://www.facebook.com/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-default">FB</a>
-    <a href="http://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ news.Title }}">TW</a>
+    <a href="http://twitter.com/share?url={{ request.build_absolute_uri }}&text={{ news.title }}">TW</a>
     <a href="https://plus.google.com/share?url={{ request.build_absolute_uri }}">G+</a>
 </div>
 <br>

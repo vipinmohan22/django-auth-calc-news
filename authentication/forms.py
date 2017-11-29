@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.db import transaction
+from newsapp.models import Searchtopic
 
 
 class SignUpForm(UserCreationForm):
@@ -11,7 +12,6 @@ class SignUpForm(UserCreationForm):
     country = forms.CharField(max_length=30, label='Country')
     phone = forms.CharField()
     birth_date = forms.DateField(help_text='Required. Format: YYYY-MM-DD')
-
 
     class Meta:
         model = User
@@ -25,12 +25,19 @@ class SignUpForm(UserCreationForm):
             raise forms.ValidationError(u'Email addresses must be unique.')
         return email
 
-    # def clean_phone(self):
-    #     phone = self.cleaned_data.get('phone')
-    #     username = self.cleaned_data.get('username')
-    #     if phone and User.objects.filter(phone=phone).exclude(username=username).exists():
-    #         raise forms.ValidationError(u'Phone number must be unique.')
-    #     return phone
+        # def clean_phone(self):
+        #     phone = self.cleaned_data.get('phone')
+        #     username = self.cleaned_data.get('username')
+        #     if phone and User.objects.filter(phone=phone).exclude(username=username).exists():
+        #         raise forms.ValidationError(u'Phone number must be unique.')
+        #     return phone
+
+
+class SearchForm():
+    # query = forms.CharField(max_length=40, label='search_query')
+    class Meta:
+        model = Searchtopic
+        fields = ('search_query',)
 
 
 @login_required

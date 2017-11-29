@@ -31,9 +31,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <form action="{% url 'newsapp:search' %}" method="GET">
-            <input name="query" type="text">
-            <input type="submit" value="Submit">
+
+            {{ search_forms }}
         </form>
+
         <div class="collapse navbar-collapse" id="mainMenu">
             {% if user.is_authenticated %}
             <ul class="navbar-nav ml-auto">

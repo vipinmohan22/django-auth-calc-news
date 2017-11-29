@@ -1,9 +1,0 @@
-{% extends 'newsapp/base.html' %}
-
-{% block content %}
-  <ul>
-  {% for news in filter.qs %}
-    <li>{{ news.Title }} - {{ news.created_at }}</li>
-  {% endfor %}
-  </ul>
-{% endblock %}

@@ -20,7 +20,7 @@ def validate_comment(value):
 
 
 class Newstopic(models.Model):
-    Title = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=100, unique=True)
     description = models.TextField(max_length=2000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
@@ -28,11 +28,11 @@ class Newstopic(models.Model):
     updated_by = models.ForeignKey(User, null=True, related_name='+')
 
     def __str__(self):
-        return self.Title
+        return self.title
 
 
 class Searchtopic(models.Model):
-    searchname = models.CharField(max_length=20)
+    search_query = models.CharField(max_length=20)
 
 
 class Comment(models.Model):

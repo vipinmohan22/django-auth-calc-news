@@ -3,18 +3,16 @@ from django import forms
 from .models import Searchtopic, Newstopic, Comment
 
 
-class SearchForm():
-    query = forms.CharField(max_length=20, label='Query')
-
+class SearchForm(forms.ModelForm):
     class Meta:
         model = Searchtopic
-        fields = ('query')
+        fields = ('search_query',)
 
 
 class NewsForm(forms.ModelForm):
     class Meta:
         model = Newstopic
-        fields = ('Title', 'description',)
+        fields = ('title', 'description',)
 
 
 class CommentForm(forms.ModelForm):
