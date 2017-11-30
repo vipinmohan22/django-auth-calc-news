@@ -1,6 +1,5 @@
 import datetime
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -14,26 +13,14 @@ from .models import Newstopic, Comment
 
 
 # Create your views here.
-class IndexView(ListView):
+class IndexListView(ListView):
     model = Newstopic
     paginate_by = 5
     template_name = 'newsapp/index.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        news = Newstopic.objects.filter(updated_at__lte=timezone.now()).order_by('-updated_at')
-        paginator = Paginator(news, self.paginate_by)
-        page = self.request.GET.get('page')
-
-        try:
-            news = paginator.page(page)
-        except PageNotAnInteger:
-            news = paginator.page(1)
-        except EmptyPage:
-            news = paginator.page(paginator.num_pages)
-
-        context['news'] = news
-        return context
+    def get_queryset(self):
+        queryset = Newstopic.objects.filter(updated_at__lte=timezone.now()).order_by('-updated_at')
+        return queryset
 
 
 # def index(request):

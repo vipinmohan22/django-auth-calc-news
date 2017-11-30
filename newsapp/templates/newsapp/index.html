@@ -1,7 +1,7 @@
 {% extends 'newsapp/base.html' %}
 
 {% block content %}
-{% for news in news %}
+{% for news in newstopic_list %}
 <div class="postlist">
     <h1><a href="{% url 'newsapp:news_detail' pk=news.pk %}">{{ news.title }}</a></h1>
     <p>published: {{ news.updated_at }}&emsp;&emsp;Author: {{ news.created_by}}</p>
@@ -10,27 +10,21 @@
 
 {% endfor %}
 
-{% if news.has_other_pages %}
-  <ul class="pagination">
-    {% if news.has_previous %}
-      <li><a href="?page={{ news.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="{% url 'newsapp:index' %}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{% url 'newsapp:index' %}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
     {% endif %}
-    {% for i in news.paginator.page_range %}
-      {% if news.number == i %}
-        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if news.has_next %}
-      <li><a href="?page={{ news.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
-{% endif %}
 
 
 

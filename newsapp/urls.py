@@ -1,10 +1,9 @@
 from django.conf.urls import *
+
 from . import views
 
-from newsapp.views import IndexView
-
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^$', views.IndexListView.as_view(), name='index'),
     url(r'^news_detail/(?P<pk>\d+)/$', views.NewsDetailView.as_view(), name='news_detail'),
     # url(r'^news_detail/(?P<pk>\d+)/$', views.news_detail, name='news_detail'),
     url(r'^search/$', views.SearchView.as_view(), name='search'),
